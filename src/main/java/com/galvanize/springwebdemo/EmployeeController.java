@@ -29,4 +29,16 @@ public class EmployeeController {
         return employee;
     }
 
+    @GetMapping("/search")
+    public List<Employee> findEmployeesByFirstAndLast(@RequestParam String firstName,
+                                                      @RequestParam String lastName){
+        List<Employee> searchResults = new ArrayList<>();
+        for(Employee emp : employees) {
+            if(emp.getFirstName().equals(firstName) && emp.getLastName().equals(lastName)) {
+                searchResults.add(emp);
+            }
+        }
+        return searchResults;
+    }
+
 }

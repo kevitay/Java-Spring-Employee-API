@@ -16,7 +16,7 @@ public class EmployeeControllerTests {
 
     @Test
     public void controllerReturnsEmployeeWithId3() throws Exception {
-        mockMvc.perform(get("api/employee/3"))
+        mockMvc.perform(get("/api/employee/3"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(3))
