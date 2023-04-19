@@ -51,27 +51,66 @@ public class DefaultEndpointTests {
     @Test
     public void employeeWithFirstNameAndLastNameParametersReturnsEmployeeWithinArray() throws Exception {
         mockMvc.perform(get("/api/employee/search")
-                .param("firstName", "Fifth")
+                .param("firstName", "Third")
                 .param("lastName", "Employee"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(5))
-                .andExpect(jsonPath("$[0].firstName").value("Fifth"))
+                .andExpect(jsonPath("$[0].id").value(3))
+                .andExpect(jsonPath("$[0].firstName").value("Third"))
                 .andExpect(jsonPath("$[0].lastName").value("Employee"));
     }
 
+//    @Test
+//    public void employeeAddSavesNewEmployee() throws Exception {
+//        String json = "{ \"id\": \"6\", \"firstName\": \"Sixth\", \"lastName\": \"Employee\" }";
+//        mockMvc.perform(post("/api/employee")
+//                    .contentType(MediaType.APPLICATION_JSON)
+//                    .content(json))
+//                    .andDo(print())
+//                    .andExpect(status().isOk())
+//                    .andExpect(jsonPath("$.id").value(6))
+//                    .andExpect(jsonPath("$.firstName").value("Sixth"))
+//                    .andExpect(jsonPath("$.lastName").value("Employee"));
+//    }
+
     @Test
-    public void employeeAddSavesNewEmployee() throws Exception {
+    void employeeAdd_savesNewEmployee() throws Exception {
         String json = "{ \"id\": \"6\", \"firstName\": \"Sixth\", \"lastName\": \"Employee\" }";
         mockMvc.perform(post("/api/employee")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(json))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.id").value(6))
-                    .andExpect(jsonPath("$.firstName").value("Sixth"))
-                    .andExpect(jsonPath("$.lastName").value("Employee"));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(6))
+                .andExpect(jsonPath("$.firstName").value("Sixth"))
+                .andExpect(jsonPath("$.lastName").value("Employee"));
+    }
+
+    @Test
+    void putEmployee_replacesAllData() throws Exception {
+        String putJson = "{ \"firstName\": \"5\", \"lastName\": \"employee\" }";
+        mockMvc.perform(put("/api/employee/5")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(putJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(5))
+                .andExpect(jsonPath("$.firstName").value("5"))
+                .andExpect(jsonPath("$.lastName").value("employee"));
+    }
+
+    @Test
+    void patchEmployeeReplacesAllData() throws Exception {
+        String patchJson = "{ \"firstName\": \"5\" }";
+        mockMvc.perform(patch("/api/employee/5")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(patchJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(5))
+                .andExpect(jsonPath("$.firstName").value("5"))
+                .andExpect(jsonPath("$.lastName").value("Employee"));
     }
 
 }

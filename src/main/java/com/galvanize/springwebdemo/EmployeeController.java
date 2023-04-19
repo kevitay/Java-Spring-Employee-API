@@ -2,7 +2,10 @@ package com.galvanize.springwebdemo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -39,6 +42,56 @@ public class EmployeeController {
             }
         }
         return searchResults;
+    }
+
+//    @PostMapping("")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public Employee addEmployee(@RequestBody Employee newEmployee) {
+//        employees.add(newEmployee);
+//        return newEmployee;
+//    }
+
+    @PostMapping("")
+    public ResponseEntity<Employee> addEmployee(@RequestBody Employee newEmployee) {
+        employees.add(newEmployee);
+        return new ResponseEntity<Employee>(newEmployee, HttpStatus.CREATED);
+    }
+
+//    @PostMapping("/add")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public ResponseEntity<Employee> addEmployee(@RequestBody Employee newEmployee) {
+//        employees.add(newEmployee);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(newEmployee);
+//    }
+
+    @PutMapping("{id}")
+    public Employee putEmployee(@PathVariable Integer id, @RequestBody Employee updatedEmployee) {
+        Employee employee = null;
+        for (Employee emp : employees) {
+            if (emp.getId() == id) {
+                emp.setFirstName(updatedEmployee.getFirstName());
+                emp.setLastName(updatedEmployee.getLastName());
+                employee = emp;
+            }
+        }
+        return employee;
+    }
+
+    @PatchMapping("/{id}")
+    public Employee patchEmployee(@PathVariable Integer id, @RequestBody Employee partialEmployee) {
+        Employee employee = null;
+        for (Employee emp : employees) {
+            if (emp.getId() == id) {
+                if(Objects.nonNull(partialEmployee.getFirstName())) {
+                    emp.setFirstName(partialEmployee.getFirstName());
+                }
+                if(Objects.nonNull(partialEmployee.getLastName())) {
+                    emp.setLastName(partialEmployee.getLastName());
+                }
+                employee = emp;
+            }
+        }
+        return employee;
     }
 
 }
